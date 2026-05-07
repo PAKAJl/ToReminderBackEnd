@@ -1,11 +1,18 @@
-
-import { db } from '../db/index.js';
-import { tasks } from '../db/schema.js';
-import { eq } from 'drizzle-orm';
+import { db } from "../db/index.js";
+import { tasks } from "../db/schema.js";
+import { eq } from "drizzle-orm";
 
 export const taskService = {
   async getAll() {
     return await db.select().from(tasks).all();
+  },
+
+  async getAllByToken(token) {
+    console.log(token)
+    return await db
+      .select()
+      .from(tasks)
+      .where(eq(tasks.token, token)) // Добавляем условие фильтрации;
   },
 
   async create(data) {
@@ -13,9 +20,10 @@ export const taskService = {
   },
 
   async toggleComplete(id, status) {
-    return await db.update(tasks)
+    return await db
+      .update(tasks)
       .set({ isCompleted: status })
       .where(eq(tasks.id, id))
       .returning();
-  }
+  },
 };
