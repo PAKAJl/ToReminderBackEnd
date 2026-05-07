@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer, index } from 'drizzle-orm/sqlite-core';
 
 export const tasks = sqliteTable('tasks', {
   id: integer('id').primaryKey({ autoIncrement: true }),
@@ -7,5 +7,19 @@ export const tasks = sqliteTable('tasks', {
   status: text('status').default('todo'),
   priority: text('priority').default('low'),
   date: text('date').default('-'),
-  token: text('token').default('test'),
+  token: text('token')
+    .notNull()
+    .references(() => projects.token, { 
+      onDelete: 'cascade', // Если проект удален, удаляем и задачи
+      onUpdate: 'cascade'  // Если токен проекта изменится, он обновится и в задачах
+    }),
+}, (table) => ({
+  // Индекс для быстрого поиска всех задач конкретного проекта
+  tokenIdx: index('token_idx').on(table.token),
+}));
+
+export const projects = sqliteTable('projects', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  name: text('name').notNull(),
+  token: text('token').default('test').unique(),
 });

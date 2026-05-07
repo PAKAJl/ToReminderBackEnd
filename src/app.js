@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import taskRoutes from './routes/tasks.routes.js';
+import projectRoutes from './routes/projects.routes.js';
 //import { errorHandler } from './middleware/errorHandler.js';
 
 // Загружаем переменные окружения из .env (URL базы данных, порт и т.д.)
@@ -26,6 +27,7 @@ app.get('/', (req, res) => {
 // Подключаем маршруты для задач
 // Теперь все пути в taskRoutes будут начинаться с /api/tasks
 app.use('/api/tasks', taskRoutes);
+app.use('/api/projects', projectRoutes);
 
 // --- Error Handling (Обработка ошибок) ---
 

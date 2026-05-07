@@ -2,7 +2,7 @@ import { taskService } from "../services/tasks.service.js";
 
 export const getTasks = async (req, res, next) => {
   try {
-    const token = req.query.token;
+    const token = req.headers.authorization;
     let data;
     if (token == null) {
       data = await taskService.getAll();
@@ -20,7 +20,7 @@ export const getTasks = async (req, res, next) => {
 export const deleteTask = async (req, res, next) => {
   try {
     const id = req.query.id;
-    const token = req.query.token;
+    const token = req.headers.authorization;
     const deletedTask = await taskService.delete(id, token);
     res.status(201).json(deletedTask);
   } catch (error) {
@@ -31,9 +31,14 @@ export const deleteTask = async (req, res, next) => {
 export const createTask = async (req, res, next) => {
   try {
     const { title } = req.body;
+    const token = req.headers.authorization;
     if (!title) return res.status(400).json({ error: "Title is required" });
 
-    const newTask = await taskService.create(req.body);
+    const taskData = {
+      ...req.body,
+      token: token
+    };
+    const newTask = await taskService.create(taskData);
     res.status(201).json(newTask[0]);
   } catch (error) {
     next(error);

@@ -8,6 +8,13 @@
       "when": 1777549042562,
       "tag": "0000_sharp_shotgun",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1778190988849,
+      "tag": "0001_worried_madelyne_pryor",
+      "breakpoints": true
     }
   ]
 }

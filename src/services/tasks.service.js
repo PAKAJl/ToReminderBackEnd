@@ -16,6 +16,7 @@ export const taskService = {
   },
 
   async create(data) {
+    console.log(data)
     return await db.insert(tasks).values(data).returning();
   },
 
