@@ -1,6 +1,6 @@
 import { db } from "../db/index.js";
 import { tasks } from "../db/schema.js";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 export const taskService = {
   async getAll() {
@@ -17,6 +17,10 @@ export const taskService = {
 
   async create(data) {
     return await db.insert(tasks).values(data).returning();
+  },
+
+  async delete(id, token) {
+    return await db.delete(tasks).where(and(eq(tasks.id, id), eq(tasks.token, token))).returning();
   },
 
   async toggleComplete(id, status) {

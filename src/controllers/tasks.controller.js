@@ -17,6 +17,17 @@ export const getTasks = async (req, res, next) => {
   }
 };
 
+export const deleteTask = async (req, res, next) => {
+  try {
+    const id = req.query.id;
+    const token = req.query.token;
+    const deletedTask = await taskService.delete(id, token);
+    res.status(201).json(deletedTask);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const createTask = async (req, res, next) => {
   try {
     const { title } = req.body;
