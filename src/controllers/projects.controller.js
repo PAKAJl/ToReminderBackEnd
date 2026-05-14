@@ -33,6 +33,8 @@ export const deleteProject = async (req, res, next) => {
 
 export const createProject = async (req, res, next) => {
   try {
+    console.log("Headers:", req.headers); // Проверим, пришел ли content-type
+    console.log("Body:", req.body);       // Проверим, есть ли тут данные
     const { name } = req.body;
     if (!name) return res.status(400).json({ error: "Name is required" });
 
