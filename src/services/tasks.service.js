@@ -24,11 +24,16 @@ export const taskService = {
     return await db.delete(tasks).where(and(eq(tasks.id, id), eq(tasks.token, token))).returning();
   },
 
-  async toggleComplete(id, status) {
+  async update(id,token, data) {
     return await db
       .update(tasks)
-      .set({ isCompleted: status })
-      .where(eq(tasks.id, id))
+      .set({ title: data.title,
+        description: data.description,
+        status: data.status,
+        priority: data.priority,})
+      .where(and(eq(tasks.id, id), eq(tasks.token, token)))
       .returning();
   },
 };
+
+

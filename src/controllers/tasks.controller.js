@@ -44,3 +44,15 @@ export const createTask = async (req, res, next) => {
     next(error);
   }
 };
+
+export const updateTask = async (req, res, next) => {
+  try {
+    
+    const token = req.headers.authorization;
+
+    const upadatedProject = await taskService.update(req.body.id, token, req.body);
+    res.status(201).json(upadatedProject);
+  } catch (error) {
+    next(error);
+  }
+};
