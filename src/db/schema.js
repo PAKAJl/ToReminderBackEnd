@@ -7,6 +7,8 @@ export const tasks = sqliteTable('tasks', {
   status: text('status').default('todo'),
   priority: text('priority').default('low'),
   date: text('date').default('-'),
+  color: text('color').default('white'),
+  createdAt: integer('created_at'),
   token: text('token')
     .notNull()
     .references(() => projects.token, { 

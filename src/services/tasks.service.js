@@ -8,15 +8,13 @@ export const taskService = {
   },
 
   async getAllByToken(token) {
-    console.log(token)
     return await db
       .select()
       .from(tasks)
-      .where(eq(tasks.token, token)) // Добавляем условие фильтрации;
+      .where(eq(tasks.token, token));
   },
 
   async create(data) {
-    console.log(data)
     return await db.insert(tasks).values(data).returning();
   },
 
@@ -30,7 +28,9 @@ export const taskService = {
       .set({ title: data.title,
         description: data.description,
         status: data.status,
-        priority: data.priority,})
+        priority: data.priority,
+        date: data.date,
+        color: data.color,})
       .where(and(eq(tasks.id, id), eq(tasks.token, token)))
       .returning();
   },

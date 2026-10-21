@@ -1,13 +1,13 @@
 import { projectService } from "../services/projects.service.js";
+import { extractToken } from "../utils/extractToken.js";
 
 export const getName = async (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
+    const token = extractToken(req);
+    if (!token) {
       return res.status(400).json({ error: "Token is undefined" });
     }
 
-    const token = authHeader.replace('Bearer ', '');
     const project = await projectService.getNameByToken(token);
 
     if (!project) {
@@ -23,9 +23,15 @@ export const getName = async (req, res, next) => {
 
 export const deleteProject = async (req, res, next) => {
   try {
-    const token = req.headers.authorization;
+    const token = extractToken(req);
+    if (!token) {
+      return res.status(400).json({ error: "Token is undefined" });
+    }
     const deletedProject = await projectService.delete(token);
-    res.status(201).json(deletedProject);
+    if (!deletedProject || deletedProject.length === 0) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+    res.status(200).json(deletedProject[0]);
   } catch (error) {
     next(error);
   }
@@ -33,8 +39,6 @@ export const deleteProject = async (req, res, next) => {
 
 export const createProject = async (req, res, next) => {
   try {
-    console.log("Headers:", req.headers); // Проверим, пришел ли content-type
-    console.log("Body:", req.body);       // Проверим, есть ли тут данные
     const { name } = req.body;
     if (!name) return res.status(400).json({ error: "Name is required" });
 
@@ -48,14 +52,16 @@ export const createProject = async (req, res, next) => {
 export const updateName = async (req, res, next) => {
   try {
     const { name } = req.body;
-    const token = req.headers.authorization;
+    const token = extractToken(req);
     if (!name) return res.status(400).json({ error: "New Name is required" });
+    if (!token) return res.status(400).json({ error: "Token is undefined" });
 
-    const upadatedProject = await projectService.nameUpdate(token, name);
-    res.status(201).json(upadatedProject);
+    const updatedProject = await projectService.nameUpdate(token, name);
+    if (!updatedProject || updatedProject.length === 0) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+    res.status(200).json(updatedProject[0]);
   } catch (error) {
     next(error);
   }
 };
-
-

@@ -33,7 +33,6 @@ export const projectService = {
   },
 
   async nameUpdate(token, name) {
-    console.log(token + " " + name);
     return await db
       .update(projects)
       .set({ name: name })
